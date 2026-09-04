@@ -8,19 +8,19 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - ${MEDIA_PATH}:/media:ro
+      - ${MEDIA_PATH:-/media}:/media:ro
     restart: unless-stopped
     networks:
       - proxy
     labels:
       - "traefik.enable=true"
       # HTTPS Router
-      - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${SERVICE_DOMAIN}`)"
-      - "traefik.http.routers.${SERVICE_NAME}.entrypoints=${HTTPS_ENTRYPOINT:-websecure}"
-      - "traefik.http.routers.${SERVICE_NAME}.tls=true"
-      - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=${CERT_RESOLVER:-letsencrypt}"
-      - "traefik.http.routers.${SERVICE_NAME}.middlewares=${SERVICE_NAME}-ratelimit@docker"
-      - "traefik.http.routers.${SERVICE_NAME}.service=${SERVICE_NAME}-svc"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.rule=Host(`${SERVICE_DOMAIN:-jellyfin.roadtotech.me}`)"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.entrypoints=${HTTPS_ENTRYPOINT:-websecure}"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.tls=true"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.tls.certresolver=${CERT_RESOLVER:-myresolver}"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.middlewares=${SERVICE_NAME:-jellyfin}-ratelimit@docker"
+      - "traefik.http.routers.${SERVICE_NAME:-jellyfin}.service=${SERVICE_NAME:-jellyfin}-svc"
 
       # Rate Limit Middleware
       - "traefik.http.middlewares.${SERVICE_NAME}-ratelimit.ratelimit.average=${RATE_LIMIT_AVG:-100}"
