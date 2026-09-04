@@ -1,0 +1,17 @@
+name: "jellyfin"
+aliases:
+  - "media"
+domain: "jellyfin.roadtotech.me"
+description: "Media Server & Streaming Hub"
+visible: true
+auth: true
+networks:
+  - proxy-net
+env:
+  MEDIA_PATH: "/media"
+homepage:
+  title: "Jellyfin"
+  group: "Media & Productivity"
+  icon: "jellyfin.png"
+  container: "jellyfin"
+  weight: 10
