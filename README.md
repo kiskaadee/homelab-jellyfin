@@ -1,27 +1,40 @@
-# 🍿 Homelab Jellyfin
+# 🍿 Homelab Jellyfin (Media Server)
 
-Self-hosted media streaming system for movies, TV series, music, and home recordings.
-
-Part of the [homelab-core](https://github.com/kiskaadee/homelab-core) cluster ecosystem.
+Hardware-accelerated media server and streaming platform for movies, television, and music.
 
 ---
 
-## 🏗️ Architecture & Storage
+## 🏗️ Architecture & Requirements
 
-- **Container Image**: `jellyfin/jellyfin:latest`
-- **Proxy**: Traefik (with rate limiting middleware attached to `proxy-net`)
-- **Media Path**: `/media` (read-only bind mount)
-- **Runtime Data**: `./config` and `./cache` (runtime app state, gitignored)
+- **Proxy Network**: Attached to external `proxy-net`
+- **Domain**: `jellyfin.roadtotech.me`
+- **Authelia Protected**: Yes (ForwardAuth SSO)
+- **Target Port**: `8096`
+- **Media Path**: `/media` (read-only)
 
 ---
 
-## ⚙️ Environment Variables
+## ⚙️ Configuration & Metadata (`app.yaml`)
 
-| Variable | Description | Default / Example |
-| :--- | :--- | :--- |
-| `JELLYFIN_DOMAIN` | Streaming Web UI FQDN | `jellyfin.arch-services.mywire.org` |
-| `MEDIA_PATH` | Host path to media libraries | `/media` |
-| `PUID` / `PGID` | User and Group execution IDs | `1000:1000` |
+```yaml
+name: "jellyfin"
+aliases:
+  - "media"
+domain: "jellyfin.roadtotech.me"
+description: "Media Server & Streaming Hub"
+visible: true
+auth: true
+networks:
+  - proxy-net
+env:
+  MEDIA_PATH: "/media"
+homepage:
+  title: "Jellyfin"
+  group: "Media & Productivity"
+  icon: "jellyfin.png"
+  container: "jellyfin"
+  weight: 10
+```
 
 ---
 
@@ -29,10 +42,17 @@ Part of the [homelab-core](https://github.com/kiskaadee/homelab-core) cluster ec
 
 ### Via Orchestrator (`appctl`)
 ```bash
-appctl up homelab-jellyfin
+appctl up jellyfin
+# or using shortcut alias
+appctl up media
 ```
 
 ### Manual Deployment
 ```bash
 docker compose up -d
 ```
+
+---
+
+## 📄 License
+This repository is released into the public domain under the [Unlicense](LICENSE).
