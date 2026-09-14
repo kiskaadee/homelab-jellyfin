@@ -9,6 +9,10 @@ services:
       - ./config:/config
       - ./cache:/cache
       - ${MEDIA_PATH:-/media}:/media:ro
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "303"
     restart: unless-stopped
     networks:
       - proxy
